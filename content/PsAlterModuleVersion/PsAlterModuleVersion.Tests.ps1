@@ -1,8 +1,8 @@
 # test one - as expected 
 $OldErrorActionPref = $ErrorActionPreference
-$qwerty = ".\PsAlterModuleVersion.ps1"
+$qwerty = (Join-Path $PSScriptRoot ".\PsAlterModuleVersion.ps1")
 $testBuildNumber = "1.5.4567"
-$file = Get-ChildItem ".\TestPsd1file.psd1"
+$file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
 $fileFullName = $file.Fullname
 $e = . $qwerty -buildNumber $testbuildNumber -File $fileFullName
 Write-Host $e
@@ -12,7 +12,7 @@ if ($e -ne "ModuleVersion = '1.5.4567'") {
 # test two - not a psd1 file
 $ErrorActionPreference = 'SilentlyContinue'
 $testBuildNumber = "1.5.4567"
-$file = Get-ChildItem ".\icon.png"
+$file = Get-ChildItem (Join-Path $PSScriptRoot ".\icon.png")
 $fileFullName = $file.Fullname
 try {
     . $qwerty -buildNumber $testbuildNumber -File $fileFullName
@@ -40,7 +40,7 @@ catch {
 # test four - psd1 file does not contain ModuleVersionNumber
 $ErrorActionPreference = 'SilentlyContinue'
 $testBuildNumber = "1.5.4567"
-$file = Get-ChildItem ".\MissingModuleVersionNumber.psd1"
+$file = Get-ChildItem (Join-Path $PSScriptRoot ".\MissingModuleVersionNumber.psd1")
 $fileFullName = $file.Fullname
 try {
     . $qwerty -buildNumber $testbuildNumber -File $fileFullName
