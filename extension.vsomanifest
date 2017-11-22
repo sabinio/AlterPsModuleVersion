@@ -1,0 +1,55 @@
+{
+    "manifestVersion": 1,
+    "version": "0.5.0",
+    "id": "AlterPsModuleVersion",
+    "name": "Alter PowerShell ModuleVersion Number",
+    "description": "Alter ModuleVersion Element stored in a Windows PowerShell data file (.psd1).",
+    "categories": [
+        "Build and release"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "publisher": "richiebzzzt",
+        "icons": {
+            "default": "images/packageDefaultIcon.png"
+         },
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "contributions": [
+        {
+            "id": "powershell-alter-moduleversion-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "PsAlterModuleVersion"
+            }
+        }
+    ],
+    "scopes": [],
+    "contributionTypes": [],
+     "files": [
+            {
+                "path": "PsAlterModuleVersion/icon.png", "addressable": true
+            },
+            {
+                "path": "PsAlterModuleVersion/PsAlterModuleVersion.ps1", "addressable": true
+            },
+            {
+                "path": "PsAlterModuleVersion/task.json", "addressable": true
+            },
+            {
+                "path": "images/packageDefaultIcon.png", "addressable": true
+            },
+            {
+                "path": "extension.vsomanifest", "addressable": true
+            }
+        ]
+}
