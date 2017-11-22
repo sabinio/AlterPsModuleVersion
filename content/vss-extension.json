@@ -49,7 +49,7 @@
                 "path": "images/packageDefaultIcon.png", "addressable": true
             },
             {
-                "path": "extension.vsomanifest", "addressable": true
+                "path": "vss-extension.json", "addressable": true
             }
         ]
 }
