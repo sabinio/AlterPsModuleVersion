@@ -36,7 +36,7 @@ Function Edit-ModuleVersionNumber {
     $betaRegex = "^(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$" 
     if (($ModuleVersionNumber -match $alphaRegex) -eq $false) {
         if (($ModuleVersionNumber -match $betaRegex) -eq $false) {
-            Write-Error "New ModuleVersion Number not in correct format; Expected ##.##.##(.##) , actual $semver"
+            Write-Error "New ModuleVersion Number not in correct format; Expected ##.##.##(.##) , actual $ModuleVersionNumber"
             Throw "WrongFormat"
         }
     }
@@ -54,5 +54,4 @@ Function Edit-ModuleVersionNumber {
         Throw 0
     }
 }
-Write-Host "here "$file
 Edit-ModuleVersionNumber -ModuleVersionNumber $buildNumber -psd1File $file
