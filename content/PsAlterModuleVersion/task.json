@@ -37,7 +37,7 @@
     ],
     "execution": {
         "PowerShell": {
-            "target": "$(currentDirectory)\\PSAlterVersionNumber.ps1",
+            "target": "PSAlterVersionNumber.ps1",
             "argumentFormat": "",
             "workingDirectory": ""
         }

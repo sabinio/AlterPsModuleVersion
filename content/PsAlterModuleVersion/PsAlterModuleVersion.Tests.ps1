@@ -82,7 +82,7 @@ catch {
 # test six - wrong format for version number 
 $qwerty = (Join-Path $PSScriptRoot ".\PsAlterModuleVersion.ps1")
 $VersionNumbers = @()
-$VersionNumbers = "1.0.t", "1.0.0.t", "1.0.0.0.t" , "t.0.0.345"
+$VersionNumbers = "1.0.t", "1.0.0.t", "1.0.0.0.t" , "t.0.0.345", "1.rt.0.345", "&()*"
 foreach ($testBuildNumber in $VersionNumbers) {
     $ErrorActionPreference = 'SilentlyContinue'
     $file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
@@ -93,10 +93,10 @@ foreach ($testBuildNumber in $VersionNumbers) {
     catch {
         $ErrorActionPreference = $OldErrorActionPref
         if ($_.Exception.Message -eq "WrongFormat") {
-            Write-Host "Asserted Exception Correctly - $($_.Exception.Message)" -ForegroundColor Green
+            Write-Host "Asserted Exception Correctly - $testbuildNumber produces $($_.Exception.Message)" -ForegroundColor Green
         }
         else {
-            Throw "Test six failed on $testBuildNumber !"
+            Throw "Test six failed on $testBuildNumber ! $($_.Exception.Message)"
         }
     }
 }
