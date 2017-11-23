@@ -6,11 +6,10 @@ Function Edit-ModuleVersionNumber {
     [cmdletbinding()]
     param(
         [ValidateNotNullOrEmpty()]
-        [string]$ModuleVersionNumber,
+        $ModuleVersionNumber,
         [ValidateNotNullOrEmpty()]
-        [string]$psd1File
+        $psd1File
     )
-    $psd1File = $psd1File.Trim()
     $ModuleVersionNumber = $ModuleVersionNumber.Trim()
     if ((Test-Path $psd1File) -eq $false){
         Write-Error "$psd1File does not exist!"

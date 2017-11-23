@@ -28,7 +28,7 @@
         },
         {
             "name": "file",
-            "type": "String",
+            "type": "filePath",
             "label": "psd1 File Path",
             "defaultValue": "",
             "helpMarkDown": "Filepath to the Windows PowerShell data file (.psd1).",
