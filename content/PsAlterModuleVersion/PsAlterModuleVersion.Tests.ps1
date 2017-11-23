@@ -5,23 +5,30 @@ $testBuildNumber = "1.5.4567"
 $file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
 $fileFullName = $file.Fullname
 $e = . $qwerty -buildNumber $testbuildNumber -File $fileFullName
-Write-Host $e
 if ($e -ne "ModuleVersion = '1.5.4567'") {
     Throw "Test One failed"
 }
+else {
+    Write-Host "Asserted result correctly - $e matches ModuleVersion = `'$testbuildNumber`'" -ForegroundColor Green
+}
 
-# test one a - as expected, different version number format 
+# test two - as expected, different version number format 
 $OldErrorActionPref = $ErrorActionPreference
 $qwerty = (Join-Path $PSScriptRoot ".\PsAlterModuleVersion.ps1")
-$testBuildNumber = "1.5.4567.0"
-$file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
-$fileFullName = $file.Fullname
-$e = . $qwerty -buildNumber $testbuildNumber -File $fileFullName
-Write-Host $e
-if ($e -ne "ModuleVersion = '1.5.4567.0'") {
-    Throw "Test One A failed!"
+$validBuildNumbers = @()
+$validBuildNumbers = "1.5.4567.0", "1.0.0.5", "1.0.0.4567"
+foreach ($testBuildNumber in $validBuildNumbers) {
+    $file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
+    $fileFullName = $file.Fullname
+    $e = . $qwerty -buildNumber $testbuildNumber -File $fileFullName
+    if ($e -ne "ModuleVersion = `'$testbuildNumber`'") {
+        Throw "Test Two failed on $testbuildNumber !"
+    }
+    else {
+        Write-Host "Asserted result correctly - $e matches ModuleVersion = `'$testbuildNumber`'" -ForegroundColor Green
+    }
 }
-# test two - not a psd1 file
+# test three - not a psd1 file
 $ErrorActionPreference = 'SilentlyContinue'
 $testBuildNumber = "1.5.4567"
 $file = Get-ChildItem (Join-Path $PSScriptRoot ".\icon.png")
@@ -32,13 +39,13 @@ try {
 catch {
     $ErrorActionPreference = $OldErrorActionPref
     if ($_.Exception.Message -eq "notapsd1") {
-        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)"
+        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)" -ForegroundColor Green
     }
-    else{
-        Throw "Test two failed!"
+    else {
+        Throw "Test three failed!"
     }
 }
-# test 3 - psd1 file does not exist
+# test four - psd1 file does not exist
 $ErrorActionPreference = 'SilentlyContinue'
 $testBuildNumber = "1.5.4567"
 $file = ".\noFile.psd1"
@@ -49,13 +56,13 @@ catch {
     $ErrorActionPreference = $OldErrorActionPref
     $_.Exception.Message
     if ($_.Exception.Message -eq "psd1miss") {
-        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)"
+        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)" -ForegroundColor Green
     }
-    else{
-        Throw "Test three failed!"
+    else {
+        Throw "Test four failed!"
     }
 }
-# test four - psd1 file does not contain ModuleVersionNumber
+# test five - psd1 file does not contain ModuleVersionNumber
 $ErrorActionPreference = 'SilentlyContinue'
 $testBuildNumber = "1.5.4567"
 $file = Get-ChildItem (Join-Path $PSScriptRoot ".\MissingModuleVersionNumber.psd1")
@@ -66,27 +73,32 @@ try {
 catch {
     $ErrorActionPreference = $OldErrorActionPref
     if ($_.Exception.Message -eq "NoModuleVersionNumber") {
-        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)"
+        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)" -ForegroundColor Green
     }
-    else{
-        Throw "Test four failed!"
-    }
-}
-# test five - wrong format for version number 
-$ErrorActionPreference = 'SilentlyContinue'
-$qwerty = (Join-Path $PSScriptRoot ".\PsAlterModuleVersion.ps1")
-$testBuildNumber = "1.5.asdf"
-$file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
-$fileFullName = $file.Fullname
-try {
-    . $qwerty -buildNumber $testbuildNumber -File $fileFullName
-}
-catch {
-    $ErrorActionPreference = $OldErrorActionPref
-    if ($_.Exception.Message -eq "WrongFormat") {
-        Write-Host "Asserted Exception Correctly - $($_.Exception.Message)"
-    }
-    else{
+    else {
         Throw "Test five failed!"
     }
 }
+# test six - wrong format for version number 
+$qwerty = (Join-Path $PSScriptRoot ".\PsAlterModuleVersion.ps1")
+$VersionNumbers = @()
+$VersionNumbers = "1.0.t", "1.0.0.t", "1.0.0.0.t" , "t.0.0.345"
+foreach ($testBuildNumber in $VersionNumbers) {
+    $ErrorActionPreference = 'SilentlyContinue'
+    $file = Get-ChildItem (Join-Path $PSScriptRoot ".\TestPsd1file.psd1")
+    $fileFullName = $file.Fullname
+    try {
+        . $qwerty -buildNumber $testbuildNumber -File $fileFullName
+    }
+    catch {
+        $ErrorActionPreference = $OldErrorActionPref
+        if ($_.Exception.Message -eq "WrongFormat") {
+            Write-Host "Asserted Exception Correctly - $($_.Exception.Message)" -ForegroundColor Green
+        }
+        else {
+            Throw "Test six failed on $testBuildNumber !"
+        }
+    }
+}
+
+Write-Host "Tests passed!" -ForegroundColor Green
