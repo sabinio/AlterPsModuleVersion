@@ -1,23 +1,20 @@
-
 param(    
     $buildNumber,
     $file
 )
-
 Function Edit-ModuleVersionNumber {
     [cmdletbinding()]
     param(
         [ValidateNotNullOrEmpty()]
-        $ModuleVersionNumber,
+        [string]$ModuleVersionNumber,
         [ValidateNotNullOrEmpty()]
-        $psd1File
+        [string]$psd1File
     )
-    if ( $(Try { Test-Path $psd1File.trim() } Catch { $false }) ) {
-        write-host "Path $psd1File OK"
-    }
-    Else {
+    $psd1File = $psd1File.Trim()
+    $ModuleVersionNumber = $ModuleVersionNumber.Trim()
+    if ((Test-Path $psd1File) -eq $false){
         Write-Error "$psd1File does not exist!"
-        Throw "psd1miss"
+        throw "psd1miss"
     }
     $extn = [IO.Path]::GetExtension($psd1File)
     if ($extn -ne ".psd1" ) {
@@ -25,25 +22,19 @@ Function Edit-ModuleVersionNumber {
         Throw "notapsd1"
     }
     $psd1FileName = Split-Path -Path $psd1File -Leaf
-    Write-Host "$psd1FileName location is $psd1File"
-    $regex = 'ModuleVersion(.*)'
-    $ReturnValue = (@( Get-Content $psd1File | Where-Object { $_.Contains("ModuleVersion") } ).Count)
-    if ($ReturnValue -eq 0) {
+    if ((@( Get-Content $psd1File | Where-Object { $_.Contains("ModuleVersion") } ).Count) -eq 0) {
         Write-Error "ModuleVersionNumber element not found in $psd1FileName!"
         Throw "NoModuleVersionNumber"
     }
-    $alphaRegex = "^(\d+\.)?(\d+\.)?(\*|\d+)$"
-    $betaRegex = "^(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$" 
-    if (($ModuleVersionNumber -match $alphaRegex) -eq $false) {
-        if (($ModuleVersionNumber -match $betaRegex) -eq $false) {
-            Write-Error "New ModuleVersion Number not in correct format; Expected ##.##.##(.##) , actual $ModuleVersionNumber"
+    if (($ModuleVersionNumber -match "^(\d+\.)?(\d+\.)?(\*|\d+)$") -eq $false) {
+        if (($ModuleVersionNumber -match "^(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$") -eq $false) {
+            Write-Error "New ModuleVersion Number not in correct format; Expected ##.##.##(.##) , Actual $ModuleVersionNumber"
             Throw "WrongFormat"
         }
     }
     Write-Host "ModuleVersionNumber in $psd1FileName will be altered to $ModuleVersionNumber."
     try {
-
-        (Get-Content $psd1File) -replace $regex, "ModuleVersion = '$ModuleVersionNumber'" | Set-Content $psd1File
+        (Get-Content $psd1File) -replace 'ModuleVersion(.*)', "ModuleVersion = '$ModuleVersionNumber'" | Set-Content $psd1File
         [string]$updatedModuleVersion = Get-Content $psd1File | Where-Object { $_ -match "ModuleVersion" }
         $updatedModuleVersion = $updatedModuleVersion.Trim()
         Write-Host "Updated to $updatedModuleVersion"
