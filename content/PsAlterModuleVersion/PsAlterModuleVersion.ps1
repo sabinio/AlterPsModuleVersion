@@ -32,8 +32,17 @@ Function Edit-ModuleVersionNumber {
         Write-Error "ModuleVersionNumber element not found in $psd1FileName!"
         Throw "NoModuleVersionNumber"
     }
+    $alphaRegex = "^(\d+\.)?(\d+\.)?(\*|\d+)$"
+    $betaRegex = "^(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$" 
+    if (($ModuleVersionNumber -match $alphaRegex) -eq $false) {
+        if (($ModuleVersionNumber -match $betaRegex) -eq $false) {
+            Write-Error "New ModuleVersion Number not in correct format; Expected ##.##.##(.##) , actual $semver"
+            Throw "WrongFormat"
+        }
+    }
+    Write-Host "ModuleVersionNumber in $psd1FileName will be altered to $ModuleVersionNumber."
     try {
-        Write-Host "ModuleVersionNumber in $psd1FileName will be altered to $ModuleVersionNumber."
+
         (Get-Content $psd1File) -replace $regex, "ModuleVersion = '$ModuleVersionNumber'" | Set-Content $psd1File
         [string]$updatedModuleVersion = Get-Content $psd1File | Where-Object { $_ -match "ModuleVersion" }
         $updatedModuleVersion = $updatedModuleVersion.Trim()
