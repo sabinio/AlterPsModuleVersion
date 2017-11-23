@@ -37,7 +37,7 @@
     ],
     "execution": {
         "PowerShell": {
-            "target": "PSAlterVersionNumber.ps1",
+            "target": "PsAlterModuleVersion.ps1",
             "argumentFormat": "",
             "workingDirectory": ""
         }
