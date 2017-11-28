@@ -12,7 +12,7 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "publisher": "richiebzzzt",
+    "publisher": "sabinio",
         "icons": {
             "default": "images/packageDefaultIcon.png"
          },
