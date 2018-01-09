@@ -49,8 +49,15 @@
     ProcessorArchitecture = ''
  
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @()
- 
+    RequiredModules = @( `
+    @{ ModuleName = 'AzureRM.Network'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'AzureRM.Profile'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'AzureRM.HDInsight'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'AzureRM.DataLakeStore'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'AzureRM.DataLakeAnalytics'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'AzureRM.Storage'; ModuleVersion = '1.0.0.1'; }, `
+    @{ ModuleName = 'Azure.Storage'; ModuleVersion = '1.0.0.1'; } `
+    );
     # Script files (.psm1) that are run in the caller's environment prior to importing this module
     ScriptsToProcess = @()
  
